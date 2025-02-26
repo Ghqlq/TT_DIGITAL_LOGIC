@@ -16,6 +16,7 @@
 
 #     # Reset
 #     dut._log.info("Reset")
+
 #     dut.ena.value = 1
 #     dut.ui_in.value = 0
 #     dut.uio_in.value = 0
