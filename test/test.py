@@ -93,6 +93,7 @@ async def test_priority_encoder(dut):
     dut.ui_in.value = 0
     dut.uio_in.value = 0
 
+    # Test cases for different inputs
     test_cases = [
         (0b10000000, 0b00000000, 15),
         (0b01000000, 0b00000000, 14),
@@ -120,4 +121,5 @@ async def test_priority_encoder(dut):
         actual = int(dut.uo_out.value)
         dut._log.info(f"ui_in: {bin(ui)}, uio_in: {bin(uio)}, Expected: {expected}, Got: {actual}")
         assert actual == expected, f"Expected {expected}, got {actual}"
+
 
