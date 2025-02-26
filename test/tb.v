@@ -48,19 +48,16 @@
 
 // endmodule
 
- `default_nettype none
+`default_nettype none
 `timescale 1ns / 1ps
 
-/* Testbench for Priority Encoder */
 module tb ();
 
-  // Dump the signals to a VCD file for waveform analysis
   initial begin
     $dumpfile("tb.vcd");
     $dumpvars(0, tb);
   end
 
-  // Wire up the inputs and outputs
   reg [7:0] ui_in;
   reg [7:0] uio_in;
   wire [7:0] uo_out;
@@ -69,7 +66,6 @@ module tb ();
   reg clk = 0;
   reg rst_n = 1;
 
-  // Instantiate the priority encoder module
   tt_um_priority_encoder user_project (
       .ui_in  (ui_in),
       .uo_out (uo_out),
@@ -81,24 +77,18 @@ module tb ();
       .ena    (1'b1)
   );
 
-  // Generate a clock signal
   always #5 clk = ~clk;
 
   initial begin
-    // Reset sequence
     rst_n = 0;
-    #10 rst_n = 1; 
-
-    // Initialize inputs
     ui_in = 8'b00000000;
     uio_in = 8'b00000000;
-    #10;
+    #10 rst_n = 1; 
 
     // Test different inputs
     ui_in = 8'b10000000; uio_in = 8'b00000000; #10;
     ui_in = 8'b00000000; uio_in = 8'b10000000; #10;
 
-    // Finish simulation
     #50;
     $finish;
   end
