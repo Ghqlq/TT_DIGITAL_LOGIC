@@ -27,7 +27,7 @@
 
 // endmodule
 
-`default_nettype none
+default_nettype none
 
 module tt_um_priority_encoder (
     input  wire [7:0] ui_in,    // 8-bit input A
@@ -43,9 +43,13 @@ module tt_um_priority_encoder (
     wire [15:0] in_data;
     reg [7:0] out_data;
 
-    assign in_data = {ui_in, uio_in};
+    assign in_data = {ui_in, uio_in};  // Combine the two 8-bit inputs into a 16-bit data bus
 
     always @(*) begin
+        // Initialize out_data to a default value
+        out_data = 8'b11110000;  // Default: No '1' found case
+
+        // Priority Encoder Logic with if-else
         if (in_data[15]) out_data = 8'd15;
         else if (in_data[14]) out_data = 8'd14;
         else if (in_data[13]) out_data = 8'd13;
@@ -62,14 +66,13 @@ module tt_um_priority_encoder (
         else if (in_data[2]) out_data = 8'd2;
         else if (in_data[1]) out_data = 8'd1;
         else if (in_data[0]) out_data = 8'd0;
-        else out_data = 8'b11110000; // No '1' found case
     end
 
     assign uo_out = out_data;
 
     always @(*) begin
-        uio_out = 8'b00000000;
-        uio_oe  = 8'b00000000;
+        uio_out = 8'b00000000;  // Assign 0 to unused output
+        uio_oe  = 8'b00000000;  // Assign 0 to unused output enable
     end
 
 endmodule
