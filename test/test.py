@@ -69,9 +69,26 @@
 import cocotb
 from cocotb.triggers import Timer
 
+# Clock generator coroutine
+async def clock_gen(dut):
+    while True:
+        dut.clk.value = 0
+        await Timer(5, units="ns")
+        dut.clk.value = 1
+        await Timer(5, units="ns")
+
 @cocotb.test()
 async def test_priority_encoder(dut):
     dut._log.info("Starting priority encoder test")
+
+    # Reset sequence
+    dut.rst_n.value = 0
+    await Timer(10, units="ns")
+    dut.rst_n.value = 1
+
+    # Start the clock process
+    cocotb.start_soon(clock_gen(dut))
+
     dut.ena.value = 1
     dut.ui_in.value = 0
     dut.uio_in.value = 0
@@ -99,7 +116,8 @@ async def test_priority_encoder(dut):
     for ui, uio, expected in test_cases:
         dut.ui_in.value = ui
         dut.uio_in.value = uio
-        await Timer(2, units="ns")
+        await Timer(10, units="ns")
         actual = int(dut.uo_out.value)
         dut._log.info(f"ui_in: {bin(ui)}, uio_in: {bin(uio)}, Expected: {expected}, Got: {actual}")
         assert actual == expected, f"Expected {expected}, got {actual}"
+
