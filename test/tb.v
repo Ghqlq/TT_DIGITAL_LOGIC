@@ -47,7 +47,8 @@
 //   );
 
 // endmodule
-`default_nettype none
+
+ `default_nettype none
 `timescale 1ns / 1ps
 
 /* Testbench for Priority Encoder */
@@ -57,7 +58,6 @@ module tb ();
   initial begin
     $dumpfile("tb.vcd");
     $dumpvars(0, tb);
-    #1;
   end
 
   // Wire up the inputs and outputs
@@ -66,6 +66,8 @@ module tb ();
   wire [7:0] uo_out;
   wire [7:0] uio_out;
   wire [7:0] uio_oe;
+  reg clk = 0;
+  reg rst_n = 1;
 
   // Instantiate the priority encoder module
   tt_um_priority_encoder user_project (
@@ -73,14 +75,32 @@ module tb ();
       .uo_out (uo_out),
       .uio_in (uio_in),
       .uio_out(uio_out),
-      .uio_oe (uio_oe)
+      .uio_oe (uio_oe),
+      .clk    (clk),
+      .rst_n  (rst_n),
+      .ena    (1'b1)
   );
 
+  // Generate a clock signal
+  always #5 clk = ~clk;
+
   initial begin
+    // Reset sequence
+    rst_n = 0;
+    #10 rst_n = 1; 
+
     // Initialize inputs
     ui_in = 8'b00000000;
     uio_in = 8'b00000000;
     #10;
+
+    // Test different inputs
+    ui_in = 8'b10000000; uio_in = 8'b00000000; #10;
+    ui_in = 8'b00000000; uio_in = 8'b10000000; #10;
+
+    // Finish simulation
+    #50;
+    $finish;
   end
 
 endmodule
