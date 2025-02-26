@@ -4,7 +4,11 @@
 # defaults
 SIM ?= icarus
 TOPLEVEL_LANG ?= verilog
-SRC_DIR = $(PWD)/../src
+#SRC_DIR = $(PWD)/../src
+
+SRC_DIR = $(PWD)
+
+
 PROJECT_SOURCES = project.v
 
 ifneq ($(GATES),yes)
