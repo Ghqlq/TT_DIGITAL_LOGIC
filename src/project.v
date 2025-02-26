@@ -33,8 +33,8 @@ module tt_um_priority_encoder (
     input  wire [7:0] ui_in,    // 8-bit input A
     output wire [7:0] uo_out,   // 8-bit output C
     input  wire [7:0] uio_in,   // 8-bit input B
-    output wire [7:0] uio_out,  // Unused, assigned to 0
-    output wire [7:0] uio_oe,   // Unused, assigned to 0
+    output reg  [7:0] uio_out,  // Unused, assigned to 0
+    output reg  [7:0] uio_oe,   // Unused, assigned to 0
     input  wire       ena,      // Always 1 when powered, ignored
     input  wire       clk,      // Clock, not used in combinational logic
     input  wire       rst_n     // Active low reset, ignored
@@ -69,7 +69,10 @@ module tt_um_priority_encoder (
 
     // Assign outputs
     assign uo_out  = out_data;
-    assign uio_out = 8'b00000000;
-    assign uio_oe  = 8'b00000000;
+
+    always @(*) begin
+        uio_out = 8'b00000000;
+        uio_oe  = 8'b00000000;
+    end
 
 endmodule
