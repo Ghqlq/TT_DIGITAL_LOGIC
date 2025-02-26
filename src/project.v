@@ -40,13 +40,11 @@ module tt_um_priority_encoder (
     input  wire       rst_n     // Active low reset, ignored
 );
 
-    wire [15:0] in_data;  // Combined input signal
-    reg [7:0] out_data;   // Output from priority encoder
+    wire [15:0] in_data;
+    reg [7:0] out_data;
 
-    // Combine A[7:0] and B[7:0] to form In[15:0]
     assign in_data = {ui_in, uio_in};
 
-    // Priority Encoder Logic using if-else
     always @(*) begin
         if (in_data[15]) out_data = 8'd15;
         else if (in_data[14]) out_data = 8'd14;
@@ -67,8 +65,7 @@ module tt_um_priority_encoder (
         else out_data = 8'b11110000; // No '1' found case
     end
 
-    // Assign outputs
-    assign uo_out  = out_data;
+    assign uo_out = out_data;
 
     always @(*) begin
         uio_out = 8'b00000000;
